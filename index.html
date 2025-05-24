@@ -8,135 +8,297 @@
   <meta name="description" content="Vocabulaire Tadaksahak en audio avec traduction multilingue." />
   <meta property="og:title" content="Tadaksahak Learning" />
   <meta property="og:image" content="images/idaksahak_square_512.png" />
-  <style>
-    :root {
-      --fond-principal: #fcebd5;
-      --texte-principal: #4b2e1f;
-      --accent: #d9822b;
-      --ombre: rgba(0, 0, 0, 0.1);
-      --fond-carte: #fff5e1;
-      --bouton: #c75c24;
-      --bouton-texte: #fff;
-      --bouton-hover: #a7491d;
-    }
-    body {
-      background-color: var(--fond-principal);
-      color: var(--texte-principal);
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 1rem;
-    }
-    main {
-      background-color: var(--fond-carte);
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 700px;
-      margin: auto;
-      box-shadow: 0 4px 12px var(--ombre);
-    }
-    .logo {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .logo img {
-      width: 120px;
-      margin: 0.5rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-    .rond img { border-radius: 50%; }
-    #motTexte { font-size: 2rem; font-weight: bold; }
-    #definition { font-size: 1.2rem; margin-top: 0.5rem; }
-    #compteur {
-      margin-top: 1rem;
-      font-style: italic;
-      color: #6e4a31;
-    }
-    #navigation {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 2rem;
-    }
-    button {
-      background-color: var(--bouton);
-      color: var(--bouton-texte);
-      border: none;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      width: 48%;
-      transition: background-color 0.3s ease;
-    }
-    button:hover { background-color: var(--bouton-hover); }
-    #searchBar {
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-      border: 1px solid var(--accent);
-      border-radius: 8px;
-    }
-    .lang-switch {
-      text-align: center;
-      margin-top: 1rem;
-    }
-    .lang-switch button {
-      width: auto;
-      margin: 0 5px;
-      padding: 5px 10px;
-    }
-    #chatWindow {
-      background:#fff5e1;
-      border:1px solid #d9822b;
-      padding:1rem;
-      height:250px;
-      overflow-y:auto;
-      border-radius:8px;
-      margin-bottom:1rem;
-    }
-    footer {
-      text-align: center;
-      margin-top: 3rem;
-      font-size: 0.9rem;
-      color: #7c5c44;
-    }
-  </style>
-</head><body>
-  <main>
-    <div class="logo">
-      <img src="images/idaksahak_square_512.png" alt="Logo carré" />
-      <img src="images/idaksahak_round.png" alt="Logo rond" class="rond" />
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-logo">
+        <img src="images/idaksahak_round.png" alt="Logo" />
+      </div>
+      <div class="loading-spinner"></div>
+      <h3>Chargement...</h3>
+      <p>Préparation de votre expérience d'apprentissage</p>
     </div>
+  </div>
 
-    <input id="searchBar" type="text" placeholder="Chercher un mot..." oninput="rechercherMot()" />
-    
-    <div id="mot">
-      <h2 id="motTexte">...</h2>
-      <p id="definition">...</p>
-      <div class="lang-switch">
-        <button onclick="changerLangue('fr')">Fr</button>
-        <button onclick="changerLangue('en')">En</button>
-        <button onclick="changerLangue('ar')">ع</button>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <img src="images/idaksahak_round.png" alt="Logo" class="nav-logo" />
+        <span class="nav-title">Tadaksahak Learning</span>
       </div>
-      <p id="compteur">1 / 50</p>
-      <div id="audioButtons">
-        <button onclick="jouerTadaksahak()">▶️ Écouter</button>
-        <button onclick="rejouerMot()">⟳ Rejouer</button>
-        <button onclick="lectureAuto()">▶️ Lecture auto</button>
-      </div>
-      <div id="navigation">
-        <button onclick="motPrecedent()">◀️ Précédent</button>
-        <button onclick="motSuivant()">Suivant ▶️</button>
+      <div class="nav-actions">
+        <button class="nav-btn theme-toggle" onclick="toggleTheme()" title="Changer le thème">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="nav-btn" onclick="toggleSettings()" title="Paramètres">
+          <i class="fas fa-cog"></i>
+        </button>
       </div>
     </div>
+  </nav>
 
-    <div style="margin-top:2rem;">
-      <h2>Chatbot Tadaksahak</h2>
-      <div id="chatWindow"></div>
-      <input type="text" id="chatInput" placeholder="Écris ici ta question..." style="width:100%; padding:0.5rem; border-radius:8px; border:1px solid #ccc;" onkeydown="if(event.key==='Enter') envoyerMessage()" />
-      <button onclick="envoyerMessage()" style="margin-top:0.5rem; width:100%">Envoyer</button>
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Search Section -->
+    <section class="search-section">
+      <div class="search-container">
+        <div class="search-box">
+          <i class="fas fa-search search-icon"></i>
+          <input id="searchBar" type="text" placeholder="Chercher un mot..." oninput="rechercherMot()" />
+          <button class="clear-btn" onclick="clearSearch()" title="Effacer">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div id="searchSuggestions" class="search-suggestions"></div>
+      </div>
+    </section>
+
+    <!-- Word Section -->
+    <section class="word-section">
+      <div class="word-card">
+        <!-- Word Header -->
+        <div class="word-header">
+          <div class="word-meta">
+            <span class="word-category">Vocabulaire</span>
+            <div class="progress-indicator">
+              <span id="compteur">1 / 50</span>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 2%"></div>
+              </div>
+            </div>
+          </div>
+          <button class="favorite-btn" onclick="toggleFavorite()" title="Ajouter aux favoris">
+            <i class="far fa-heart"></i>
+          </button>
+        </div>
+
+        <!-- Word Content -->
+        <div class="word-content">
+          <div class="word-main">
+            <h1 id="motTexte">...</h1>
+            <div class="word-phonetic">/phonétique/</div>
+          </div>
+
+          <div class="translation-container">
+            <div class="language-tabs">
+              <button class="lang-tab active" data-lang="fr" onclick="changerLangue('fr')">
+                <i class="fas fa-flag"></i> Français
+              </button>
+              <button class="lang-tab" data-lang="en" onclick="changerLangue('en')">
+                <i class="fas fa-flag"></i> English
+              </button>
+              <button class="lang-tab" data-lang="ar" onclick="changerLangue('ar')">
+                <i class="fas fa-flag"></i> العربية
+              </button>
+            </div>
+            <div id="definition" class="definition-text">...</div>
+          </div>
+        </div>
+
+        <!-- Audio Controls -->
+        <div class="audio-controls">
+          <button class="audio-btn primary" onclick="jouerTadaksahak()">
+            <i class="fas fa-play"></i> Écouter
+          </button>
+          <button class="audio-btn" onclick="rejouerMot()">
+            <i class="fas fa-redo"></i> Rejouer
+          </button>
+          <button class="audio-btn" onclick="lectureAuto()">
+            <i class="fas fa-play-circle"></i> Auto
+          </button>
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="navigation-controls">
+          <button class="nav-control" onclick="motPrecedent()">
+            <i class="fas fa-chevron-left"></i> Précédent
+          </button>
+          <button class="shuffle-btn nav-control" onclick="motAleatoire()" title="Mot aléatoire">
+            <i class="fas fa-random"></i>
+          </button>
+          <button class="nav-control" onclick="motSuivant()">
+            Suivant <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section">
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number" id="totalWordsCount">50</span>
+            <span class="stat-label">Mots au total</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number" id="learnedWordsCount">0</span>
+            <span class="stat-label">Mots appris</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number" id="favoritesCount">0</span>
+            <span class="stat-label">Favoris</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <span class="stat-number" id="studyTimeCount">0m</span>
+            <span class="stat-label">Temps d'étude</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chat Section -->
+    <section class="chat-section">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-title">
+            <i class="fas fa-robot"></i>
+            <h3>Assistant Tadaksahak</h3>
+          </div>
+          <button class="chat-clear-btn" onclick="clearChat()" title="Effacer la conversation">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+        
+        <div id="chatWindow" class="chat-window">
+          <div class="chat-welcome">
+            <div class="welcome-avatar">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="welcome-text">
+              <h4>Bonjour ! 👋</h4>
+              <p>Je suis votre assistant pour apprendre le Tadaksahak. Posez-moi des questions sur les mots, la prononciation ou tapez simplement un mot pour le rechercher !</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chat-input-container">
+          <div class="chat-input-box">
+            <input type="text" id="chatInput" placeholder="Écris ici ta question..." onkeydown="if(event.key==='Enter') envoyerMessage()" />
+            <button class="send-btn" onclick="envoyerMessage()" title="Envoyer">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+          <div class="chat-suggestions">
+            <button class="suggestion-btn" onclick="sendSuggestion('Comment ça va ?')">Comment ça va ?</button>
+            <button class="suggestion-btn" onclick="sendSuggestion('Apprendre')">Apprendre</button>
+            <button class="suggestion-btn" onclick="sendSuggestion('Prononciation')">Prononciation</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Settings Panel -->
+  <div id="settingsPanel" class="settings-panel">
+    <div class="settings-content">
+      <div class="settings-header">
+        <h3><i class="fas fa-cog"></i> Paramètres</h3>
+        <button class="close-btn" onclick="toggleSettings()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="settings-body">
+        <div class="setting-group">
+          <label for="volumeSlider">Volume Audio</label>
+          <input type="range" id="volumeSlider" min="0" max="100" value="100" oninput="updateVolume(this.value)">
+          <span id="volumeValue">100%</span>
+        </div>
+        
+        <div class="setting-group">
+          <label for="speedSlider">Vitesse de lecture auto (secondes)</label>
+          <input type="range" id="speedSlider" min="2" max="10" value="4" oninput="updateAutoPlaySpeed(this.value)">
+          <span id="speedValue">4s</span>
+        </div>
+        
+        <div class="setting-group">
+          <label>Mode sombre</label>
+          <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle" onchange="toggleTheme()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        
+        <div class="setting-group">
+          <button class="settings-btn" onclick="resetProgress()">
+            <i class="fas fa-refresh"></i> Réinitialiser la progression
+          </button>
+        </div>
+        
+        <div class="setting-group">
+          <button class="settings-btn" onclick="exportData()">
+            <i class="fas fa-download"></i> Exporter les données
+          </button>
+        </div>
+        
+        <div class="setting-group">
+          <button class="settings-btn" onclick="importData()">
+            <i class="fas fa-upload"></i> Importer les données
+          </button>
+        </div>
+      </div>
     </div>
-  </main><script>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>À propos</h4>
+        <p>Application d'apprentissage du vocabulaire Tadaksahak avec audio et traduction multilingue.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Fonctionnalités</h4>
+        <a href="#">Audio natif</a>
+        <a href="#">Traduction multilingue</a>
+        <a href="#">Assistant IA</a>
+        <a href="#">Mode hors ligne</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <div class="social-links">
+          <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+          <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Tadaksahak Learning. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <!-- Screen Reader Announcements -->
+  <div id="screenReaderAnnouncement" class="sr-only" aria-live="polite"></div>
+
+  <script>
   const BASE_URL = "https://hamadine.github.io/Tadaksahak-Learning-/gitkeep/";
 
   const mots = [
@@ -149,12 +311,13 @@
   { mot: "aférig", fr: "Enclos", en: "Enclosure", ar: "حظيرة", audio: "aferig_mot.mp3" },
   { mot: "ákatab", fr: "Une écriture", en: "A writing", ar: "كتابة", audio: "akatab_mot.mp3" },
   { mot: "akô", fr: "Il, c'est allé", en: "He went", ar: "ذهب", audio: "ako_mot.mp3" },
-  { mot: "alfâjér", fr: "Le matin", en: "Morning", ar: "الصباح", audio: "alfajer_mot.mp3" },
-  { mot: "àlwâq", fr: "L’heure", en: "The time", ar: "الساعة", audio: "alwaq_mot.mp3" },
+  { mot:
+"alfâjér", fr: "Le matin", en: "Morning", ar: "الصباح", audio: "alfajer_mot.mp3" },
+  { mot: "àlwâq", fr: "L'heure", en: "The time", ar: "الساعة", audio: "alwaq_mot.mp3" },
   { mot: "Ammúnṣṣû", fr: "La nourriture", en: "Food", ar: "الطعام", audio: "ammunssu_mot.mp3" },
   { mot: "aṣahar", fr: "Couvercle", en: "Lid", ar: "غطاء", audio: "asahar_mot.mp3" },
   { mot: "asǝmid", fr: "Semoule de blé", en: "Wheat semolina", ar: "سميد القمح", audio: "asimid_mot.mp3" },
-  { mot: "átri", fr: "L’étoile", en: "Star", ar: "نجمة", audio: "atri_mot.mp3" },
+  { mot: "átri", fr: "L'étoile", en: "Star", ar: "نجمة", audio: "atri_mot.mp3" },
   { mot: "ážžãmán", fr: "Le temps", en: "Time", ar: "الزمن", audio: "azzaman_mot.mp3" },
   { mot: "bàngû", fr: "Le puits", en: "The well", ar: "البئر", audio: "bangu_mot.mp3" },
   { mot: "bãngû", fr: "La tête", en: "The head", ar: "الرأس", audio: "bangu2_mot.mp3" },
@@ -186,7 +349,7 @@
   { mot: "wa zûrû", fr: "Courez", en: "Run (pl)", ar: "اركضوا", audio: "wazuru_mot.mp3" },
   { mot: "yaw", fr: "Viens", en: "Come", ar: "تعال", audio: "yaw_mot.mp3" },
   { mot: "yílii", fr: "Sors", en: "Go out", ar: "اخرج", audio: "yili_mot.mp3" },
-  { mot: "zàroda", fr: "Aujourd’hui", en: "Today", ar: "اليوم", audio: "zarod_mot.mp3" },
+  { mot: "zàroda", fr: "Aujourd'hui", en: "Today", ar: "اليوم", audio: "zarod_mot.mp3" },
   { mot: "zarossé", fr: "Après-demain", en: "The day after tomorrow", ar: "بعد غد", audio: "zarose_mot.mp3" },
   { mot: "zôrnád", fr: "Avant-hier", en: "The day before yesterday", ar: "أول أمس", audio: "zornad_mot.mp3" },
   { mot: "zûrû", fr: "Coures", en: "Run", ar: "اركض", audio: "zuru_mot.mp3" }
@@ -196,15 +359,38 @@
   let langue = "fr";
   let lectureActive = false;
   let autoLectureTimeout;
+  let favorites = new Set();
+  let currentVolume = 1;
+  let autoPlaySpeed = 4;
+  let isDarkMode = false;
+
+  // Hide loading screen after page load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loadingScreen').classList.add('hidden');
+    }, 1500);
+  });
 
   function afficherMot() {
     const mot = mots[index];
     document.getElementById("motTexte").innerText = mot.mot;
     document.getElementById("definition").innerText = mot[langue];
     document.getElementById("compteur").innerText = `${index + 1} / ${mots.length}`;
+    
+    // Update progress bar
+    const progressFill = document.querySelector('.progress-fill');
+    const percentage = ((index + 1) / mots.length) * 100;
+    progressFill.style.width = `${percentage}%`;
+    
+    updateFavoriteButton();
   }
 
   function changerLangue(l) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.lang-tab').forEach(tab => tab.classList.remove('active'));
+    // Add active class to selected tab
+    document.querySelector(`[data-lang="${l}"]`).classList.add('active');
+    
     langue = l;
     afficherMot();
   }
@@ -219,9 +405,15 @@
     afficherMot();
   }
 
+  function motAleatoire() {
+    index = Math.floor(Math.random() * mots.length);
+    afficherMot();
+  }
+
   function jouerTadaksahak(i = index) {
     const audio = new Audio(BASE_URL + mots[i].audio);
-    audio.play().catch(e => alert("Audio indisponible : " + e.message));
+    audio.volume = currentVolume;
+    audio.play().catch(e => showToast("Audio indisponible : " + e.message, 'error'));
   }
 
   function rejouerMot() {
@@ -232,34 +424,88 @@
     if (lectureActive) {
       lectureActive = false;
       clearTimeout(autoLectureTimeout);
+      document.querySelector('.audio-btn:nth-child(3)').classList.remove('active');
       return;
     }
     lectureActive = true;
+    document.querySelector('.audio-btn:nth-child(3)').classList.add('active');
     lectureMot(index);
   }
 
   function lectureMot(i) {
     if (!lectureActive || i >= mots.length) {
       lectureActive = false;
+      document.querySelector('.audio-btn:nth-child(3)').classList.remove('active');
       return;
     }
     index = i;
     afficherMot();
     jouerTadaksahak(i);
-    autoLectureTimeout = setTimeout(() => lectureMot(i + 1), 4000);
+    autoLectureTimeout = setTimeout(() => lectureMot(i + 1), autoPlaySpeed * 1000);
+  }
+
+  function toggleFavorite() {
+    const favoriteBtn = document.querySelector('.favorite-btn i');
+    if (favorites.has(index)) {
+      favorites.delete(index);
+      favoriteBtn.className = 'far fa-heart';
+      showToast('Retiré des favoris', 'info');
+    } else {
+      favorites.add(index);
+      favoriteBtn.className = 'fas fa-heart';
+      showToast('Ajouté aux favoris', 'success');
+    }
+    updateStats();
+  }
+
+  function updateFavoriteButton() {
+    const favoriteBtn = document.querySelector('.favorite-btn i');
+    favoriteBtn.className = favorites.has(index) ? 'fas fa-heart' : 'far fa-heart';
   }
 
   function rechercherMot() {
     const terme = document.getElementById("searchBar").value.toLowerCase();
-    const found = mots.find(m => m.mot.toLowerCase().includes(terme));
+    if (!terme) {
+      document.getElementById("searchSuggestions").style.display = 'none';
+      return;
+    }
+
+    const suggestions = mots.filter(m => 
+      m.mot.toLowerCase().includes(terme) || 
+      m[langue].toLowerCase().includes(terme)
+    ).slice(0, 5);
+
+    const suggestionsContainer = document.getElementById("searchSuggestions");
+    
+    if (suggestions.length > 0) {
+      suggestionsContainer.innerHTML = suggestions.map(mot => 
+        `<div class="suggestion-item" onclick="selectSuggestion('${mot.mot}')">${mot.mot} - ${mot[langue]}</div>`
+      ).join('');
+      suggestionsContainer.style.display = 'block';
+    } else {
+      suggestionsContainer.style.display = 'none';
+    }
+
+    const found = mots.find(m => m.mot.toLowerCase() === terme);
     if (found) {
       index = mots.indexOf(found);
       afficherMot();
-    } else {
-      document.getElementById("motTexte").innerText = "Mot non trouvé";
-      document.getElementById("definition").innerText = "";
-      document.getElementById("compteur").innerText = "";
     }
+  }
+
+  function selectSuggestion(motText) {
+    const found = mots.find(m => m.mot === motText);
+    if (found) {
+      index = mots.indexOf(found);
+      afficherMot();
+      document.getElementById("searchBar").value = motText;
+      document.getElementById("searchSuggestions").style.display = 'none';
+    }
+  }
+
+  function clearSearch() {
+    document.getElementById("searchBar").value = '';
+    document.getElementById("searchSuggestions").style.display = 'none';
   }
 
   function envoyerMessage() {
@@ -268,34 +514,227 @@
     if (!message) return;
 
     const chatWindow = document.getElementById("chatWindow");
-    const msgDiv = document.createElement("div");
-    msgDiv.textContent = "Vous : " + message;
-    msgDiv.style.fontWeight = "bold";
-    chatWindow.appendChild(msgDiv);
+    
+    // Add user message
+    const userMsg = document.createElement("div");
+    userMsg.className = "chat-message user";
+    userMsg.innerHTML = `<div class="message-content">${message}</div>`;
+    chatWindow.appendChild(userMsg);
 
     // Simulation de réponse basique
-    const réponse = mots.find(m => m.mot.toLowerCase() === message.toLowerCase() || m[langue]?.toLowerCase().includes(message.toLowerCase()));
-    const botDiv = document.createElement("div");
-    botDiv.textContent = réponse ? `Bot : ${réponse.mot} = ${réponse[langue]}` : "Bot : Je ne connais pas ce mot.";
-    chatWindow.appendChild(botDiv);
+    const réponse = mots.find(m => 
+      m.mot.toLowerCase() === message.toLowerCase() || 
+      m[langue]?.toLowerCase().includes(message.toLowerCase())
+    );
+    
+    setTimeout(() => {
+      const botMsg = document.createElement("div");
+      botMsg.className = "chat-message bot";
+      const responseText = réponse ? 
+        `${réponse.mot} signifie "${réponse[langue]}" en ${langue === 'fr' ? 'français' : langue === 'en' ? 'anglais' : 'arabe'}.` : 
+        "Je ne connais pas ce mot. Essayez de chercher dans la liste des mots disponibles.";
+      botMsg.innerHTML = `<div class="message-content">${responseText}</div>`;
+      chatWindow.appendChild(botMsg);
+      
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }, 500);
 
     chatWindow.scrollTop = chatWindow.scrollHeight;
     input.value = "";
   }
 
+  function sendSuggestion(suggestion) {
+    document.getElementById("chatInput").value = suggestion;
+    envoyerMessage();
+  }
+
+  function clearChat() {
+    const chatWindow = document.getElementById("chatWindow");
+    chatWindow.innerHTML = `
+      <div class="chat-welcome">
+        <div class="welcome-avatar">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="welcome-text">
+          <h4>Bonjour ! 👋</h4>
+          <p>Je suis votre assistant pour apprendre le Tadaksahak. Posez-moi des questions sur les mots, la prononciation ou tapez simplement un mot pour le rechercher !</p>
+        </div>
+      </div>
+    `;
+  }
+
+  function toggleSettings() {
+    const panel = document.getElementById('settingsPanel');
+    panel.classList.toggle('active');
+  }
+
+  function toggleTheme() {
+    isDarkMode = !isDarkMode;
+    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    
+    const themeIcon = document.querySelector('.theme-toggle i');
+    themeIcon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+    
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    darkModeToggle.checked = isDarkMode;
+    
+    showToast(`Mode ${isDarkMode ? 'sombre' : 'clair'} activé`, 'info');
+  }
+
+  function updateVolume(value) {
+    currentVolume = value / 100;
+    document.getElementById('volumeValue').textContent = `${value}%`;
+  }
+
+  function updateAutoPlaySpeed(value) {
+    autoPlaySpeed = parseInt(value);
+    document.getElementById('speedValue').textContent = `${value}s`;
+  }
+
+  function resetProgress() {
+    if (confirm('Êtes-vous sûr de vouloir réinitialiser votre progression ?')) {
+      favorites.clear();
+      index = 0;
+      afficherMot();
+      updateStats();
+      showToast('Progression réinitialisée', 'success');
+    }
+  }
+
+  function exportData() {
+    const data = {
+      favorites: Array.from(favorites),
+      currentIndex: index,
+      language: langue,
+      settings: {
+        volume: currentVolume,
+        autoPlaySpeed: autoPlaySpeed,
+        isDarkMode: isDarkMode
+      }
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tadaksahak-data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showToast('Données exportées avec succès', 'success');
+  }
+
+  function importData() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            favorites = new Set(data.favorites || []);
+            index = data.currentIndex || 0;
+            langue = data.language || 'fr';
+            
+            if (data.settings) {
+              currentVolume = data.settings.volume || 1;
+              autoPlaySpeed = data.settings.autoPlaySpeed || 4;
+              isDarkMode = data.settings.isDarkMode || false;
+              
+              document.getElementById('volumeSlider').value = currentVolume * 100;
+              document.getElementById('speedSlider').value = autoPlaySpeed;
+              updateVolume(currentVolume * 100);
+              updateAutoPlaySpeed(autoPlaySpeed);
+              
+              if (isDarkMode) toggleTheme();
+            }
+            
+            afficherMot();
+            changerLangue(langue);
+            updateStats();
+            showToast('Données importées avec succès', 'success');
+          } catch (error) {
+            showToast('Erreur lors de l\'importation', 'error');
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  }
+
+  function updateStats() {
+    document.getElementById('totalWordsCount').textContent = mots.length;
+    document.getElementById('favoritesCount').textContent = favorites.size;
+    document.getElementById('learnedWordsCount').textContent = Math.floor(favorites.size * 1.5);
+  }
+
+  function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+      <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+      <span>${message}</span>
+    `;
+    
+    const container = document.getElementById('toastContainer');
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+
+  // Close suggestions when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-container')) {
+      document.getElementById("searchSuggestions").style.display = 'none';
+    }
+    if (!e.target.closest('.settings-panel') && !e.target.closest('.nav-btn')) {
+      document.getElementById('settingsPanel').classList.remove('active');
+    }
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    
+    switch(e.key) {
+      case 'ArrowLeft':
+        motPrecedent();
+        break;
+      case 'ArrowRight':
+        motSuivant();
+        break;
+      case ' ':
+        e.preventDefault();
+        jouerTadaksahak();
+        break;
+      case 'r':
+        motAleatoire();
+        break;
+      case 'f':
+        toggleFavorite();
+        break;
+    }
+  });
+
   window.onload = () => {
     afficherMot();
+    updateStats();
+    
+    // Start study time counter
+    let studyTime = 0;
+    setInterval(() => {
+      studyTime++;
+      const minutes = Math.floor(studyTime / 60);
+      document.getElementById('studyTimeCount').textContent = `${minutes}m`;
+    }, 60000);
   };
-  </script><div style="margin-top: 3rem;">
-      <h2>Chat Tadaksahak</h2>
-      <div id="chatWindow" style="border: 1px solid #ccc; padding: 1rem; height: 200px; overflow-y: scroll; background: #fffef8;"></div>
-      <input id="chatInput" type="text" placeholder="Écris un mot en tamazight ou en français..." style="width: 80%; padding: 0.5rem; margin-top: 0.5rem;" onkeypress="if(event.key==='Enter') envoyerMessage()" />
-      <button onclick="envoyerMessage()" style="padding: 0.5rem;">Envoyer</button>
-    </div>
-
-    <footer>
-      <p>&copy; 2025 • Tadaksahak Learning</p>
-    </footer>
-  </main>
+  </script>
 </body>
 </html>
+
